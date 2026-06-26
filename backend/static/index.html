@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yuz tekshiruvi — KYC</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="logo">KYC</div>
+      <h1>Yuzni tasdiqlash</h1>
+      <p class="subtitle">Shaxsingizni pasport ma'lumotlari bilan solishtiring</p>
+    </header>
+
+    <main class="card">
+      <form id="verify-form" novalidate>
+        <div class="field">
+          <label for="pinfl">JSHSHIR (PINFL)</label>
+          <input
+            type="text"
+            id="pinfl"
+            name="pinfl"
+            inputmode="numeric"
+            pattern="[0-9]{14}"
+            maxlength="14"
+            placeholder="14 raqamli JSHSHIR"
+            required
+            autocomplete="off"
+          >
+          <span class="hint">14 ta raqamdan iborat bo'lishi kerak</span>
+        </div>
+
+        <div class="camera-section">
+          <label>Yuz surati</label>
+          <div class="camera-wrap">
+            <video id="video" autoplay playsinline muted hidden></video>
+            <canvas id="canvas" hidden></canvas>
+            <img id="preview" alt="Yuz surati" hidden>
+            <div id="camera-placeholder" class="camera-placeholder">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"/>
+                <path d="M9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9Zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5Z"/>
+              </svg>
+              <p>Kamera yoki fayl orqali yuz suratini yuklang</p>
+            </div>
+          </div>
+
+          <div class="camera-actions">
+            <button type="button" id="btn-start-camera" class="btn btn-secondary">
+              Kamerani yoqish
+            </button>
+            <button type="button" id="btn-capture" class="btn btn-secondary" hidden>
+              Suratga olish
+            </button>
+            <label class="btn btn-secondary file-label">
+              Fayl tanlash
+              <input type="file" id="file-input" accept="image/*" capture="user" hidden>
+            </label>
+            <button type="button" id="btn-retake" class="btn btn-ghost" hidden>
+              Qayta olish
+            </button>
+          </div>
+          <span class="hint">Yaxshi yoritilgan, aniq ko'rinadigan yuz surati kerak (420p yoki 780p)</span>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn btn-primary" disabled>
+          Tekshirish
+        </button>
+      </form>
+
+      <div id="loading" class="loading" hidden>
+        <div class="spinner"></div>
+        <p>Yuz solishtirilmoqda...</p>
+      </div>
+
+      <div id="result" class="result" hidden></div>
+    </main>
+
+    <footer class="footer">
+      <p>YuzId (Soliq ID) xizmati orqali shaxsni tasdiqlash</p>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

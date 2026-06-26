@@ -1,0 +1,19 @@
+services:
+  kyc:
+    build: .
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      PORT: 8000
+      YUZID_API_BASE_URL: ${YUZID_API_BASE_URL:-https://api.yuzid.uz}
+      YUZID_LOGIN: ${YUZID_LOGIN}
+      YUZID_PASSWORD: ${YUZID_PASSWORD}
+    env_file:
+      - backend/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
