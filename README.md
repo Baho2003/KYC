@@ -1,21 +1,31 @@
 # KYC
 
-Backend-сервис верификации личности с интеграцией [YuzId API](https://api.yuzid.uz) (Soliq ID — сравнение лиц).
+Shaxsni tasdiqlash xizmati — [YuzId API](https://api.yuzid.uz) (Soliq ID) integratsiyasi va o'zbek tilidagi veb-sahifa.
 
-## Быстрый старт
+## Tezkor ishga tushirish
 
 ```bash
 cd backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # укажите YUZID_LOGIN и YUZID_PASSWORD
+cp .env.example .env   # YUZID_LOGIN va YUZID_PASSWORD ni kiriting
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Документация API: http://localhost:8000/docs
+- **Veb-sahifa:** http://localhost:8000
+- **API hujjatlari:** http://localhost:8000/docs
 
-## Эндпоинты
+## Veb-sahifa
+
+O'zbek tilidagi interfeys (`/`):
+
+- JSHSHIR (PINFL) kiritish
+- Kamera orqali yuz suratini olish yoki fayl yuklash
+- YuzId API orqali shaxsni tasdiqlash
+- Natijani ko'rsatish (familiya, ism, otasining ismi)
+
+## API endpointlari
 
 | Метод | Путь | Описание |
 |-------|------|----------|
@@ -94,6 +104,10 @@ YUZID_PASSWORD=<пароль>
 
 ```
 backend/
+├── static/
+│   ├── index.html          # O'zbek tilidagi veb-sahifa
+│   ├── css/style.css
+│   └── js/app.js
 ├── app/
 │   ├── config.py                    # Настройки из .env
 │   ├── main.py                      # FastAPI приложение
