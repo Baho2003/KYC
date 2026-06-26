@@ -100,10 +100,138 @@ YUZID_LOGIN=UNITEL
 YUZID_PASSWORD=<пароль>
 ```
 
+## Hostingga deploy qilish
+
+Loyiha Docker bilan tayyor. Quyidagi usullardan birini tanlang.
+
+### Kerakli environment o'zgaruvchilar
+
+| O'zgaruvchi | Majburiy | Tavsif |
+|-------------|----------|--------|
+| `YUZID_LOGIN` | ha | YuzId API login |
+| `YUZID_PASSWORD` | ha | YuzId API parol |
+| `YUZID_API_BASE_URL` | yo'q | Default: `https://api.yuzid.uz` |
+| `PORT` | yo'q | Default: `8000` |
+
+---
+
+### 1-variant: Render.com (tavsiya etiladi, bepul)
+
+1. [render.com](https://render.com) da ro'yxatdan o'ting
+2. **New → Blueprint** yoki **New → Web Service**
+3. GitHub repozitoriyni ulang: `Baho2003/KYC`
+4. `render.yaml` avtomatik aniqlanadi
+5. **Environment** bo'limida qo'shing:
+   - `YUZID_LOGIN` = `UNITEL`
+   - `YUZID_PASSWORD` = `<parolingiz>`
+6. **Deploy** tugmasini bosing
+
+Deploy tugagach: `https://kyc-xxxx.onrender.com`
+
+---
+
+### 2-variant: Railway.app
+
+1. [railway.app](https://railway.app) da GitHub orqali login
+2. **New Project → Deploy from GitHub repo**
+3. `KYC` repozitoriyni tanlang
+4. **Variables** bo'limiga qo'shing:
+   ```
+   YUZID_LOGIN=UNITEL
+   YUZID_PASSWORD=<parolingiz>
+   ```
+5. Railway `Dockerfile` va `railway.toml` ni avtomatik ishlatadi
+6. **Settings → Generate Domain** orqali domen oling
+
+---
+
+### 3-variant: VPS (Ubuntu server)
+
+Serverda Docker o'rnatilgan bo'lishi kerak.
+
+```bash
+# 1. Repozitoriyni klonlash
+git clone https://github.com/Baho2003/KYC.git /opt/kyc
+cd /opt/kyc
+
+# 2. Environment sozlash
+cp backend/.env.example backend/.env
+nano backend/.env   # YUZID_LOGIN va YUZID_PASSWORD kiriting
+
+# 3. Ishga tushirish
+docker compose up -d --build
+
+# 4. Tekshirish
+curl http://localhost:8000/health
+```
+
+Yoki avtomatik skript:
+
+```bash
+chmod +x scripts/deploy-vps.sh
+sudo ./scripts/deploy-vps.sh
+```
+
+**Nginx + HTTPS** (ixtiyoriy):
+
+```nginx
+server {
+    listen 80;
+    server_name sizning-domeningiz.uz;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 10M;
+    }
+}
+```
+
+Keyin Certbot bilan SSL: `sudo certbot --nginx -d sizning-domeningiz.uz`
+
+---
+
+### 4-variant: Docker (qo'lda)
+
+```bash
+# Build
+docker build -t kyc-app .
+
+# Ishga tushirish
+docker run -d \
+  --name kyc \
+  -p 8000:8000 \
+  -e YUZID_LOGIN=UNITEL \
+  -e YUZID_PASSWORD=<parolingiz> \
+  --restart unless-stopped \
+  kyc-app
+```
+
+---
+
+### Deploy keyin tekshirish
+
+```bash
+curl https://sizning-domeningiz/health
+# {"status":"ok"}
+
+# Brauzerda oching
+# https://sizning-domeningiz/
+```
+
+**Muhim:** Kamera ishlashi uchun HTTPS kerak (Render va Railway avtomatik beradi).
+
 ## Структура проекта
 
 ```
-backend/
+KYC/
+├── Dockerfile              # Production Docker image
+├── docker-compose.yml      # VPS uchun
+├── render.yaml             # Render.com konfiguratsiyasi
+├── railway.toml            # Railway konfiguratsiyasi
+├── scripts/deploy-vps.sh   # VPS avtomatik o'rnatish
+└── backend/
 ├── static/
 │   ├── index.html          # O'zbek tilidagi veb-sahifa
 │   ├── css/style.css

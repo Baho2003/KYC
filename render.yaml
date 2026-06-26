@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kyc
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: YUZID_API_BASE_URL
+        value: https://api.yuzid.uz
+      - key: YUZID_LOGIN
+        sync: false
+      - key: YUZID_PASSWORD
+        sync: false
