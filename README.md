@@ -102,9 +102,11 @@ YUZID_PASSWORD=<пароль>
 
 ## Hostingga deploy qilish
 
-Loyiha Docker bilan tayyor. Quyidagi usullardan birini tanlang.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Baho2003/KYC)
 
-### Kerakli environment o'zgaruvchilar
+**Batafsil ko'rsatma:** [DEPLOY.md](DEPLOY.md)
+
+### Tez boshlash (Render)
 
 | O'zgaruvchi | Majburiy | Tavsif |
 |-------------|----------|--------|
